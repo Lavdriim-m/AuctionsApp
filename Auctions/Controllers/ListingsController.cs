@@ -88,29 +88,37 @@ namespace Auctions.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ListingVM listing)
         {
-            if(listing.Image != null)
+            if (listing.Image != null)
             {
                 string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
-                string fileName = listing.Image.FileName;
+
+                // Generate a unique file name to prevent overwriting
+                string fileName = Guid.NewGuid().ToString() + "_" + listing.Image.FileName;
                 string filePath = Path.Combine(uploadDir, fileName);
+
+                // Save the file in the wwwroot/Images directory
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     listing.Image.CopyTo(fileStream);
                 }
 
+                // Save relative path in the database (e.g., "Images/file.jpg")
                 var listObj = new Listing
                 {
                     Title = listing.Title,
                     Description = listing.Description,
                     Price = listing.Price,
                     IdentityUserId = listing.IdentityUserId,
-                    ImagePath = filePath,
+                    ImagePath = Path.Combine("Images", fileName),
                 };
+
                 await _listingsService.Add(listObj);
                 return RedirectToAction("Index");
             }
+
             return View(listing);
         }
+
         [HttpPost]
         public async Task<ActionResult> AddBid([Bind("Id, Price, ListingId, IdentityUserId")] Bid bid)
         {
