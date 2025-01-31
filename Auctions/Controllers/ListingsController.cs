@@ -9,10 +9,13 @@ using Auctions.Data;
 using Auctions.Models;
 using Auctions.Data.Services;
 using System.Security.Claims;
+<<<<<<< HEAD
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System.IO;
 using System.Threading.Tasks;
+=======
+>>>>>>> 788bfdca9a52199b53e6210cc664dd79ee38a9ef
 
 namespace Auctions.Controllers
 {
@@ -22,15 +25,23 @@ namespace Auctions.Controllers
         private readonly IBidsService _bidsService;
         private readonly ICommentsService _commentsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+<<<<<<< HEAD
         private readonly IConfiguration _configuration;
 
         public ListingsController(IListingsService listingsService, IWebHostEnvironment webHostEnvironment, IBidsService bidsService, ICommentsService commentsService, IConfiguration configuration)
+=======
+
+        public ListingsController(IListingsService listingsService, IWebHostEnvironment webHostEnvironment, IBidsService bidsService, ICommentsService commentsService)
+>>>>>>> 788bfdca9a52199b53e6210cc664dd79ee38a9ef
         {
             _listingsService = listingsService;
             _webHostEnvironment = webHostEnvironment;
             _bidsService = bidsService;
             _commentsService = commentsService;
+<<<<<<< HEAD
             _configuration = configuration;
+=======
+>>>>>>> 788bfdca9a52199b53e6210cc664dd79ee38a9ef
         }
 
         // GET: Listings
@@ -96,6 +107,7 @@ namespace Auctions.Controllers
         {
             if (listing.Image != null)
             {
+<<<<<<< HEAD
                 // Generate a unique file name for the uploaded image
                 string fileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(listing.Image.FileName);
 
@@ -121,13 +133,32 @@ namespace Auctions.Controllers
                 }
 
                 // Save relative path in the database
+=======
+                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
+
+                // Generate a unique file name to prevent overwriting
+                string fileName = Guid.NewGuid().ToString() + "_" + listing.Image.FileName;
+                string filePath = Path.Combine(uploadDir, fileName);
+
+                // Save the file in the wwwroot/Images directory
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    listing.Image.CopyTo(fileStream);
+                }
+
+                // Save relative path in the database (e.g., "Images/file.jpg")
+>>>>>>> 788bfdca9a52199b53e6210cc664dd79ee38a9ef
                 var listObj = new Listing
                 {
                     Title = listing.Title,
                     Description = listing.Description,
                     Price = listing.Price,
                     IdentityUserId = listing.IdentityUserId,
+<<<<<<< HEAD
                     ImagePath = blobClient.Uri.ToString(),
+=======
+                    ImagePath = Path.Combine("Images", fileName),
+>>>>>>> 788bfdca9a52199b53e6210cc664dd79ee38a9ef
                 };
 
                 await _listingsService.Add(listObj);

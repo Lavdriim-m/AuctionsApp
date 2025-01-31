@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Auctions.Data;
 using Auctions.Data.Services;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +40,19 @@ if (string.IsNullOrEmpty(storageConnectionString))
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(sqlConnectionString));
+=======
+using Auctions.Data;
+using Auctions.Data.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
+>>>>>>> 788bfdca9a52199b53e6210cc664dd79ee38a9ef
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -49,6 +63,7 @@ builder.Services.AddScoped<IListingsService, ListingsService>();
 builder.Services.AddScoped<IBidsService, BidsService>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
 
+<<<<<<< HEAD
 builder.Services.Configure<StorageConfig>(options =>
 {
     options.ConnectionString = storageConnectionString;
@@ -57,6 +72,10 @@ builder.Services.Configure<StorageConfig>(options =>
 var app = builder.Build();
 
 
+=======
+var app = builder.Build();
+
+>>>>>>> 788bfdca9a52199b53e6210cc664dd79ee38a9ef
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
